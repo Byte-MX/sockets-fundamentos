@@ -12,35 +12,9 @@ let server = http.createServer(app);
 app.use(express.static(publicPath));
 
 // IO: Esta es la comunicación del back end.
-let io = socketIO(server);
+module.exports.io = socketIO(server);
 
-io.on('connection', (client) => {
-    //console.log('Usuario conectado:' + client);
-    console.log('Usuario conectado.');
-
-    client.emit('enviarMensaje', {
-        usuario: 'Administrador',
-        mensaje: 'Bienvenido a esta aplicación'
-    });
-
-    client.on('disconnect', () => {
-        console.log('Usuario desconectado');
-    });
-
-    // Escuchar al cliente
-    client.on('enviarMensaje', (mensaje, callback) => {
-        console.log(mensaje);
-        if (mensaje.usuario) {
-            callback({
-                resp: 'TODO SALIO BIEN!'
-            });
-        } else {
-            callback({
-                resp: 'TODO SALIO MAL!!!'
-            });
-        }
-    });
-});
+require('./sockets/socket');
 
 server.listen(port, (err) => {
 
